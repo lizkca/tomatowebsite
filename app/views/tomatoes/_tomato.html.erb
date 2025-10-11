@@ -1,10 +1,6 @@
-<div id="<%= dom_id tomato %>" class="card p-4 space-y-3">
-  <div class="text-sm text-gray-500">Note</div>
-  <div class="text-gray-800 leading-relaxed"><%= simple_format(tomato.note) %></div>
-
-  <div class="flex flex-wrap gap-2">
-    <%= link_to "Show", tomato, class: "btn-secondary w-full sm:w-auto" %>
-    <%= link_to "Edit", edit_tomato_path(tomato), class: "btn-secondary w-full sm:w-auto" %>
-    <%= button_to "Destroy", tomato, method: :delete, class: "btn-danger w-full sm:w-auto", data: { turbo_confirm: "Are you sure?" } %>
+<div id="<%= dom_id tomato %>" class="group relative flex items-center justify-center">
+  <span class="text-4xl select-none">🍅</span>
+  <div class="pointer-events-none absolute -top-2 left-1/2 -translate-x-1/2 -translate-y-full z-10 px-2 py-1 rounded bg-gray-900 text-white text-xs shadow-md opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+    <%= tomato.note %>
   </div>
 </div>
