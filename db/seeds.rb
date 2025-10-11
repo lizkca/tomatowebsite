@@ -7,3 +7,17 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+notes = [
+  "init",
+  "可以运行",
+  "部署",
+  "解决css问题",
+  "展示番茄",
+  "在日历上展示番茄",
+  "番茄详情",
+  "测试"
+]
+
+notes.each do |n|
+  Tomato.find_or_create_by!(note: n)
+end
