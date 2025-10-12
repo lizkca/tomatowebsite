@@ -1,15 +1,21 @@
 <% content_for :title, "Showing tomato" %>
 
-<div class="md:w-2/3 w-full" data-controller="timer" data-timer-delay-value="300000" data-timer-message-value="5分钟到了！" data-timer-enabled-value="<%= flash[:just_created] ? 'true' : 'false' %>">
+<div class="md:w-2/3 w-full" data-controller="timer" data-timer-delay-value="1500000" data-timer-message-value="时间到了！" data-timer-enabled-value="<%= flash[:just_created] ? 'true' : 'false' %>">
   <% if notice.present? %>
     <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
   <% end %>
 
   <h1 class="font-bold text-4xl">Showing tomato</h1>
 
-  <div class="mt-3 inline-flex items-center gap-2 text-sm text-gray-600">
+  <div class="mt-3 flex items-center gap-3 text-sm text-gray-600">
     <span>倒计时</span>
-    <span data-timer-target="display" aria-live="polite" class="font-mono tabular-nums px-2 py-0.5 rounded bg-gray-100 text-gray-800">05:00</span>
+    <span data-timer-target="display" aria-live="polite" class="font-mono tabular-nums px-2 py-0.5 rounded bg-gray-100 text-gray-800">25:00</span>
+    <label class="flex items-center gap-1">
+      <span>时长(分钟)</span>
+      <input type="number" min="1" step="1" value="25" class="w-20 px-2 py-1 rounded border border-gray-300 bg-white text-gray-800" data-timer-target="minutes" data-action="input->timer#updateMinutes change->timer#updateMinutes">
+    </label>
+    <button type="button" class="rounded-md px-3 py-1.5 bg-gray-900 text-white hover:bg-gray-800" data-action="timer#start">开始</button>
+    <button type="button" class="rounded-md px-3 py-1.5 bg-gray-100 hover:bg-gray-50" data-action="timer#stop">停止</button>
   </div>
 
   <%= render @tomato %>
