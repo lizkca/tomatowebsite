@@ -54,16 +54,11 @@
     </div>
   <% elsif mode == 'native' %>
     <div>
-      <div class="flex flex-wrap gap-2">
-        <% if @tomatoes.any? %>
-          <% @tomatoes.each do |tomato| %>
-            <span class="text-2xl select-none" title="<%= tomato.note %>">🍅</span>
-          <% end %>
-        <% else %>
-          <div class="text-gray-500">No tomatoes yet.</div>
-        <% end %>
-      </div>
-      <p class="mt-1 text-xs text-gray-500">总计 <%= @tomatoes.size %> 个</p>
+      <% if @tomatoes.any? %>
+        <p class="text-sm text-gray-700">共有 <%= @tomatoes.size %> 个番茄。</p>
+      <% else %>
+        <div class="text-gray-500">No tomatoes yet.</div>
+      <% end %>
     </div>
   <% else %>
     <div>
