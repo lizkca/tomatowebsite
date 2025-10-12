@@ -21,12 +21,13 @@
   </div>
 
   <% if mode == 'calendar' %>
-    <% today = Date.current
-       month_start = today.beginning_of_month
-       month_end = today.end_of_month
-       cal_start = month_start.beginning_of_week(:sunday)
-       cal_end = month_end.end_of_week(:sunday)
-       tomatoes_by_date = @tomatoes.group_by { |t| t.created_at.in_time_zone.to_date }
+    <% 
+      today = Date.current
+      month_start = today.beginning_of_month
+      month_end = today.end_of_month
+      cal_start = month_start.beginning_of_week(:sunday)
+      cal_end = month_end.end_of_week(:sunday)
+      tomatoes_by_date = @tomatoes.group_by { |t| t.created_at.in_time_zone.to_date }
     %>
     <div>
       <div class="grid grid-cols-7 gap-2">
@@ -38,13 +39,13 @@
           <div class="border rounded p-2 min-h-[72px] <%= in_month ? '' : 'opacity-40' %>">
             <div class="text-xs text-gray-600"><%= date.day %></div>
             <div class="mt-1 flex flex-wrap gap-1">
-              <% count = (tomatoes_by_date[date] || []).size %>
-              <% if count > 0 %>
-                <% [count, 6].min.times do %>
-                  <span class="text-sm">🍅</span>
+              <% tomatoes_for_day = tomatoes_by_date[date] || [] %>
+              <% if tomatoes_for_day.any? %>
+                <% tomatoes_for_day.first(6).each do |tomato| %>
+                  <span class="text-sm select-none" title="<%= tomato.note %>">🍅</span>
                 <% end %>
-                <% if count > 6 %>
-                  <span class="text-xs text-gray-500">+<%= count - 6 %></span>
+                <% if tomatoes_for_day.size > 6 %>
+                  <span class="text-xs text-gray-500">+<%= tomatoes_for_day.size - 6 %></span>
                 <% end %>
               <% end %>
             </div>
@@ -65,7 +66,7 @@
       <div class="flex flex-wrap gap-2">
         <% if @tomatoes.any? %>
           <% @tomatoes.each do |tomato| %>
-            <span class="text-2xl select-none">🍅</span>
+            <span class="text-2xl select-none" title="<%= tomato.note %>">🍅</span>
           <% end %>
         <% else %>
           <div class="text-gray-500">No tomatoes yet.</div>
@@ -75,13 +76,15 @@
     </div>
   <% end %>
 
-  <div id="tomatoes" class="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-10 gap-4">
-    <% if @tomatoes.any? %>
-      <% @tomatoes.each do |tomato| %>
-        <%= render tomato %>
+  <% unless ['compact', 'calendar'].include?(mode) %>
+    <div id="tomatoes" class="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-10 gap-4">
+      <% if @tomatoes.any? %>
+        <% @tomatoes.each do |tomato| %>
+          <%= render tomato %>
+        <% end %>
+      <% else %>
+        <div class="text-gray-500">No tomatoes yet.</div>
       <% end %>
-    <% else %>
-      <div class="text-gray-500">No tomatoes yet.</div>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
 </div>
