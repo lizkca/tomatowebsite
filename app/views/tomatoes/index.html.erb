@@ -10,6 +10,76 @@
     <%= link_to "New tomato", new_tomato_path, class: "btn" %>
   </div>
 
+  <% view = params[:view] %>
+  <% mode = %w[calendar native].include?(view) ? view : 'compact' %>
+  <% active = "rounded-md px-3 py-1.5 bg-gray-900 text-white hover:bg-gray-800" %>
+  <% inactive = "rounded-md px-3 py-1.5 bg-gray-100 text-gray-800 hover:bg-gray-50" %>
+  <div class="mb-4 flex items-center gap-2">
+    <%= link_to "紧凑视图", tomatoes_path, class: (mode == 'compact' ? active : inactive) %>
+    <%= link_to "日历视图", tomatoes_path(view: 'calendar'), class: (mode == 'calendar' ? active : inactive) %>
+    <%= link_to "原生提示视图", tomatoes_path(view: 'native'), class: (mode == 'native' ? active : inactive) %>
+  </div>
+
+  <% if mode == 'calendar' %>
+    <% today = Date.current
+       month_start = today.beginning_of_month
+       month_end = today.end_of_month
+       cal_start = month_start.beginning_of_week(:sunday)
+       cal_end = month_end.end_of_week(:sunday)
+       tomatoes_by_date = @tomatoes.group_by { |t| t.created_at.in_time_zone.to_date }
+    %>
+    <div>
+      <div class="grid grid-cols-7 gap-2">
+        <% %w[日 一 二 三 四 五 六].each do |wd| %>
+          <div class="text-center text-xs text-gray-500"><%= wd %></div>
+        <% end %>
+        <% (cal_start..cal_end).each do |date| %>
+          <% in_month = (date.month == today.month) %>
+          <div class="border rounded p-2 min-h-[72px] <%= in_month ? '' : 'opacity-40' %>">
+            <div class="text-xs text-gray-600"><%= date.day %></div>
+            <div class="mt-1 flex flex-wrap gap-1">
+              <% count = (tomatoes_by_date[date] || []).size %>
+              <% if count > 0 %>
+                <% [count, 6].min.times do %>
+                  <span class="text-sm">🍅</span>
+                <% end %>
+                <% if count > 6 %>
+                  <span class="text-xs text-gray-500">+<%= count - 6 %></span>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% elsif mode == 'native' %>
+    <div>
+      <div class="flex flex-wrap gap-2">
+        <% if @tomatoes.any? %>
+          <% @tomatoes.each do |tomato| %>
+            <span class="text-2xl select-none" title="<%= tomato.note %>">🍅</span>
+          <% end %>
+        <% else %>
+          <div class="text-gray-500">No tomatoes yet.</div>
+        <% end %>
+      </div>
+      <p class="mt-1 text-xs text-gray-500">总计 <%= @tomatoes.size %> 个</p>
+    </div>
+  <% else %>
+    <div>
+      <div class="flex flex-wrap gap-2">
+        <% if @tomatoes.any? %>
+          <% @tomatoes.each do |tomato| %>
+            <span class="text-2xl select-none">🍅</span>
+          <% end %>
+        <% else %>
+          <div class="text-gray-500">No tomatoes yet.</div>
+        <% end %>
+      </div>
+      <p class="mt-1 text-xs text-gray-500">总计 <%= @tomatoes.size %> 个</p>
+    </div>
+  <% end %>
+
   <div id="tomatoes" class="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-10 gap-4">
     <% if @tomatoes.any? %>
       <% @tomatoes.each do |tomato| %>
