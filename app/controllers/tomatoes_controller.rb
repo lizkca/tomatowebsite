@@ -25,6 +25,7 @@ class TomatoesController < ApplicationController
 
     respond_to do |format|
       if @tomato.save
+        flash[:just_created] = true
         format.html { redirect_to @tomato, notice: "Tomato was successfully created." }
         format.json { render :show, status: :created, location: @tomato }
       else

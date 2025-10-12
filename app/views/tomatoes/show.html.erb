@@ -1,11 +1,16 @@
 <% content_for :title, "Showing tomato" %>
 
-<div class="md:w-2/3 w-full">
+<div class="md:w-2/3 w-full" data-controller="timer" data-timer-delay-value="300000" data-timer-message-value="5分钟到了！" data-timer-enabled-value="<%= flash[:just_created] ? 'true' : 'false' %>">
   <% if notice.present? %>
     <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
   <% end %>
 
   <h1 class="font-bold text-4xl">Showing tomato</h1>
+
+  <div class="mt-3 inline-flex items-center gap-2 text-sm text-gray-600">
+    <span>倒计时</span>
+    <span data-timer-target="display" aria-live="polite" class="font-mono tabular-nums px-2 py-0.5 rounded bg-gray-100 text-gray-800">05:00</span>
+  </div>
 
   <%= render @tomato %>
 
