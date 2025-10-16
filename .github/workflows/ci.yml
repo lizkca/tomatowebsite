@@ -6,6 +6,33 @@ on:
     branches: [ main ]
 
 jobs:
+  build_and_push_docr:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to DigitalOcean Registry
+        uses: docker/login-action@v3
+        with:
+          registry: registry.digitalocean.com
+          username: ${{ secrets.DOCR_USERNAME }}
+          password: ${{ secrets.DOCR_TOKEN }}
+
+      - name: Build and push (linux/amd64)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64
+          push: true
+          tags: |
+            registry.digitalocean.com/bearbear/tomatowebsite:latest
+            registry.digitalocean.com/bearbear/tomatowebsite:${{ github.sha }}
+
   scan_ruby:
     runs-on: ubuntu-latest
 
